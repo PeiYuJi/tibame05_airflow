@@ -12,39 +12,25 @@ from dataflow.constant import (
 # 匯入自定義的 DockerOperator 任務建立函式
 from dataflow.etl.producer_etf import (
     # 建立並回傳一個 DockerOperator 任務
-    create_producer_task,
+    create_producer_task_tw,
+    create_producer_task_us
 )
 
-from datetime import datetime
-
 # 定義 DAG，並用 with 語法將任務放入 DAG 環境中
-
-# 台股：每天 17:30 更新
 with airflow.DAG(
     # DAG 的唯一名稱，用來識別 DAG
-    dag_id="ProducerScheduler_TWSE",
+    dag_id="Producer",
     # 套用預設參數設定
     default_args=DEFAULT_ARGS,
-    # 每天 17:30 執行
-    schedule_interval="30 17 * * *", 
+    # 不自動排程，只能手動或外部觸發
+    schedule_interval=None,
     # 限制同時執行的最大 DAG 實例數
     max_active_runs=MAX_ACTIVE_RUNS,
     # 禁止補跑過去未執行的排程
     catchup=False,
-    
-    start_date=datetime(2025, 9, 15),
-) as dag_tw:
-    create_producer_task(market="tw")  # 傳遞 market 參數給 task
+) as dag:
+    # 建立並註冊 DockerOperator 任務到 DAG
 
-
-# 美股：每天 07:00 更新
-with airflow.DAG(
-    dag_id="ProducerScheduler_US",
-    default_args=DEFAULT_ARGS,
-    # 美股：每天 07:00 更新
-    schedule_interval="0 7 * * *",
-    max_active_runs=MAX_ACTIVE_RUNS,
-    catchup=False,
-    start_date=datetime(2025, 9, 15),
-) as dag_us:
-    create_producer_task(market="us")
+    tw_task = create_producer_task_tw()
+    us_task = create_producer_task_us()
+    tw_task >> us_task
