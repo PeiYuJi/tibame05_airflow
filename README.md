@@ -72,6 +72,8 @@
     docker pull peiyuji/tibame_dataflow:0.0.6
     docker pull peiyuji/tibame_dataflow:0.0.7
     docker pull peiyuji/tibame_dataflow:0.0.8
+
+    docker pull peiyuji/tibame_dataflow:0.0.10
 ## deploy-airflow:
 	DOCKER_IMAGE_VERSION=0.0.1 docker stack deploy --with-registry-auth -c docker-compose-airflow.yml airflow
 	DOCKER_IMAGE_VERSION=0.0.1.arm64 docker stack deploy --with-registry-auth -c docker-compose-airflow.yml airflow
