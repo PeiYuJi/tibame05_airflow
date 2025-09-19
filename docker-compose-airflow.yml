@@ -30,24 +30,23 @@ services:
       - etf_lib_network
 
 
-
   redis:
-    image: redis:7.0
+    image: 'bitnami/redis:5.0'
     ports:
-      - 6379:6379
+        - 6379:6379
     volumes:
-      - redis_data:/data
+        - 'redis_data:/bitnami/redis/data'
     environment:
-      - ALLOW_EMPTY_PASSWORD=yes
+        - ALLOW_EMPTY_PASSWORD=yes
     restart: always
+    # swarm 設定
     deploy:
       mode: replicated
       replicas: 1
       placement:
         constraints: [node.labels.airflow == true]
     networks:
-      - etf_lib_network
-
+        - etf_lib_network
 
   # Airflow Web UI 介面
   webserver:
