@@ -10,9 +10,10 @@ from dataflow.constant import (
 )
 
 # 匯入自定義的 DockerOperator 任務建立函式
+
 from dataflow.etl.producer_etf import (
-    # 建立並回傳一個 DockerOperator 任務
-    create_producer_task,
+    create_producer_task_tw,
+    create_producer_task_us,
 )
 
 from datetime import datetime
@@ -34,7 +35,7 @@ with airflow.DAG(
     
     start_date=datetime(2025, 9, 15),
 ) as dag_tw:
-    create_producer_task(market="tw")  # 傳遞 market 參數給 task
+    create_producer_task_tw()  # 傳遞 market 參數給 task
 
 
 # 美股：每天 07:00 更新
@@ -47,4 +48,4 @@ with airflow.DAG(
     catchup=False,
     start_date=datetime(2025, 9, 15),
 ) as dag_us:
-    create_producer_task(market="us")
+    create_producer_task_us()
