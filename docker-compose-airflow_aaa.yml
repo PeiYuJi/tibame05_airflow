@@ -59,7 +59,14 @@ services:
     ports:
       - 5000:5000  # 對外開放 5000 port
     environment:
-      - TZ=Asia/Taipei  # 設定時區
+      - TZ=Asia/Taipei
+      - AIRFLOW__CORE__EXECUTOR=CeleryExecutor
+      - AIRFLOW__CELERY__BROKER_URL=redis://redis:6379/0
+      - AIRFLOW__CELERY__RESULT_BACKEND=redis://redis:6379/0
+      - AIRFLOW__WEBSERVER__BASE_URL=http://airflow-webserver:5000
+      - AIRFLOW__LOGGING__BASE_LOG_FOLDER=/dataflow/logs
+      - AIRFLOW__LOGGING__WORKER_LOG_SERVER_PORT=8793
+      - AIRFLOW__CORE__HOSTNAME_CALLABLE=socket.gethostname
     deploy:
       mode: replicated
       replicas: 1
@@ -95,6 +102,13 @@ services:
     restart: always
     environment:
       - TZ=Asia/Taipei
+      - AIRFLOW__CORE__EXECUTOR=CeleryExecutor
+      - AIRFLOW__CELERY__BROKER_URL=redis://redis:6379/0
+      - AIRFLOW__CELERY__RESULT_BACKEND=redis://redis:6379/0
+      - AIRFLOW__WEBSERVER__BASE_URL=http://airflow-webserver:5000
+      - AIRFLOW__LOGGING__BASE_LOG_FOLDER=/dataflow/logs
+      - AIRFLOW__LOGGING__WORKER_LOG_SERVER_PORT=8793
+      - AIRFLOW__CORE__HOSTNAME_CALLABLE=socket.gethostname
     # 將容器內的 docker 與容器外的 docker 做連結
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -116,6 +130,16 @@ services:
     depends_on:
       - scheduler
     command: pipenv run airflow celery worker
+    
+    environment:
+      - TZ=Asia/Taipei
+      - AIRFLOW__CORE__EXECUTOR=CeleryExecutor
+      - AIRFLOW__CELERY__BROKER_URL=redis://redis:6379/0
+      - AIRFLOW__CELERY__RESULT_BACKEND=redis://redis:6379/0
+      - AIRFLOW__WEBSERVER__BASE_URL=http://airflow-webserver:5000
+      - AIRFLOW__LOGGING__BASE_LOG_FOLDER=/dataflow/logs
+      - AIRFLOW__LOGGING__WORKER_LOG_SERVER_PORT=8793
+      - AIRFLOW__CORE__HOSTNAME_CALLABLE=socket.gethostname
     # swarm 設定
     deploy:
       mode: replicated
@@ -135,6 +159,17 @@ services:
     depends_on:
       - scheduler
     command: pipenv run airflow celery worker -q twse
+
+    environment:
+      - TZ=Asia/Taipei
+      - AIRFLOW__CORE__EXECUTOR=CeleryExecutor
+      - AIRFLOW__CELERY__BROKER_URL=redis://redis:6379/0
+      - AIRFLOW__CELERY__RESULT_BACKEND=redis://redis:6379/0
+      - AIRFLOW__WEBSERVER__BASE_URL=http://airflow-webserver:5000
+      - AIRFLOW__LOGGING__BASE_LOG_FOLDER=/dataflow/logs
+      - AIRFLOW__LOGGING__WORKER_LOG_SERVER_PORT=8793
+      - AIRFLOW__CORE__HOSTNAME_CALLABLE=socket.gethostname
+      
     # swarm 設定
     deploy:
       mode: replicated
@@ -154,6 +189,17 @@ services:
     depends_on:
       - scheduler
     command: pipenv run airflow celery worker -q tpex
+
+    environment:
+      - TZ=Asia/Taipei
+      - AIRFLOW__CORE__EXECUTOR=CeleryExecutor
+      - AIRFLOW__CELERY__BROKER_URL=redis://redis:6379/0
+      - AIRFLOW__CELERY__RESULT_BACKEND=redis://redis:6379/0
+      - AIRFLOW__WEBSERVER__BASE_URL=http://airflow-webserver:5000
+      - AIRFLOW__LOGGING__BASE_LOG_FOLDER=/dataflow/logs
+      - AIRFLOW__LOGGING__WORKER_LOG_SERVER_PORT=8793
+      - AIRFLOW__CORE__HOSTNAME_CALLABLE=socket.gethostname
+
     # swarm 設定
     deploy:
       mode: replicated
